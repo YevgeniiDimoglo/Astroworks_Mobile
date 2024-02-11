@@ -18,8 +18,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 33
-    ndkVersion '25.2.9519653'
+    compileSdk 34
+    ndkVersion '26.1.10909125'
     
     defaultConfig {
         shaders {
@@ -27,7 +27,7 @@ android {
         }
         applicationId 'com.android.hellovk'
         minSdk 30
-        targetSdk 33
+        targetSdk 34
         externalNativeBuild {
             cmake {
                 // Available arguments are inside ${SDK}/cmake/.../android.toolchain.cmake file

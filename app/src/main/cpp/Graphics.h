@@ -1190,6 +1190,11 @@ void HelloVK::createGraphicsPipeline() {
   dynamicStateCI.dynamicStateCount =
       static_cast<uint32_t>(dynamicStateEnables.size());
 
+    VkPipelineRenderingCreateInfoKHR pipelineRenderingCreateInfo{};
+    pipelineRenderingCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+    pipelineRenderingCreateInfo.colorAttachmentCount = 1;
+    pipelineRenderingCreateInfo.pColorAttachmentFormats = &swapChainImageFormat;
+
   VkGraphicsPipelineCreateInfo pipelineInfo{};
   pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
   pipelineInfo.stageCount = 2;
@@ -1205,6 +1210,7 @@ void HelloVK::createGraphicsPipeline() {
   pipelineInfo.layout = pipelineLayout;
   pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
   pipelineInfo.basePipelineIndex = -1;
+  pipelineInfo.pNext = &pipelineRenderingCreateInfo;
 
   VK_CHECK(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo,
                                      nullptr, &graphicsPipeline));

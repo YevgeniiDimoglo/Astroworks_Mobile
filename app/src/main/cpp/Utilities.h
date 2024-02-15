@@ -5,7 +5,7 @@
 #ifndef HELLO_VULKAN_UTILITIES_H
 #define HELLO_VULKAN_UTILITIES_H
 
-// std libs
+// STD libs
 #include <filesystem>
 #include <iostream>
 #include <fstream>
@@ -25,6 +25,10 @@
 #include <list>
 #include <unordered_map>
 
+// Vulkan libs
+#include <assert.h>
+#include <vulkan/vulkan.h>
+
 // GLM libs
 #include <GLES2/gl2.h>
 #include "glm/glm.hpp"
@@ -34,6 +38,7 @@
 #include "glm/gtc/matrix_access.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+// Loader libs
 #include "external/json.hpp"
 #include "external/toml.hpp"
 
@@ -56,6 +61,22 @@ struct SwapChainSupportDetails {
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
+};
+
+#define LOG_TAG "hellovkjni"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#define VK_CHECK(x)                           \
+  do {                                        \
+    VkResult err = x;                         \
+    if (err) {                                \
+      LOGE("Detected Vulkan error: %d", err); \
+      abort();                                \
+    }                                         \
+  } while (0)
+
+struct ANativeWindowDeleter {
+    void operator()(ANativeWindow *window) { ANativeWindow_release(window); }
 };
 
 #endif //HELLO_VULKAN_UTILITIES_H

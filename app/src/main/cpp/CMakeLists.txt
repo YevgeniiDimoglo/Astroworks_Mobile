@@ -26,12 +26,14 @@ set(CMAKE_SHARED_LINKER_FLAGS
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Now build app's shared lib
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wall")
 
 add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR=1)
 
 add_library(${PROJECT_NAME} SHARED
     vk_main.cpp
+        Utilities.h
+        Graphics.h
         Graphics.cpp)
 
 # add lib dependencies

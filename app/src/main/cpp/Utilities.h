@@ -79,4 +79,55 @@ struct ANativeWindowDeleter {
     void operator()(ANativeWindow *window) { ANativeWindow_release(window); }
 };
 
+std::vector<uint8_t> LoadBinaryFileToVector(const char *file_path,
+                                            AAssetManager *assetManager) {
+    std::vector<uint8_t> file_content;
+    assert(assetManager);
+    AAsset *file =
+            AAssetManager_open(assetManager, file_path, AASSET_MODE_BUFFER);
+    size_t file_length = AAsset_getLength(file);
+
+    file_content.resize(file_length);
+
+    AAsset_read(file, file_content.data(), file_length);
+    AAsset_close(file);
+    return file_content;
+}
+
+const char *toStringMessageSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {
+    switch (s) {
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+            return "VERBOSE";
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+            return "ERROR";
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+            return "WARNING";
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+            return "INFO";
+        default:
+            return "UNKNOWN";
+    }
+}
+
+const char *toStringMessageType(VkDebugUtilsMessageTypeFlagsEXT s) {
+    if (s == (VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT))
+        return "General | Validation | Performance";
+    if (s == (VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT))
+        return "Validation | Performance";
+    if (s == (VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT))
+        return "General | Performance";
+    if (s == (VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT))
+        return "Performance";
+    if (s == (VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT))
+        return "General | Validation";
+    if (s == VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT) return "Validation";
+    if (s == VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT) return "General";
+    return "Unknown";
+}
+
 #endif //HELLO_VULKAN_UTILITIES_H

@@ -41,7 +41,7 @@
  */
 struct VulkanEngine {
   struct android_app *app;
-    vkt::Graphics *app_backend;
+    Graphics *app_backend;
   bool canRender = false;
 };
 
@@ -123,7 +123,7 @@ static void HandleInputEvents(struct android_app *app) {
  */
 void android_main(struct android_app *state) {
   VulkanEngine engine{};
-    vkt::Graphics vulkanBackend{};
+    Graphics vulkanBackend{};
 
   engine.app = state;
   engine.app_backend = &vulkanBackend;

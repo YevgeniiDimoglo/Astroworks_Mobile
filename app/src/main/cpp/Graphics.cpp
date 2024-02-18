@@ -4,7 +4,29 @@
 
 #include "Graphics.h"
 
-void vkt::Graphics::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
+void Graphics::initVulkan() {
+    createInstance();
+    createSurface();
+    pickPhysicalDevice();
+    createLogicalDeviceAndQueue();
+    setupDebugMessenger();
+    establishDisplaySizeIdentity();
+    createSwapChain();
+    createImageViews();
+    //createRenderPass();
+    createDescriptorSetLayout();
+    createUniformBuffers();
+    createDescriptorPool();
+    createDescriptorSets();
+    createGraphicsPipeline();
+    //createFramebuffers();
+    createCommandPool();
+    createCommandBuffer();
+    createSyncObjects();
+    initialized = true;
+}
+
+void Graphics::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
                            VkMemoryPropertyFlags properties, VkBuffer &buffer,
                            VkDeviceMemory &bufferMemory) {
     VkBufferCreateInfo bufferInfo{};
@@ -29,7 +51,7 @@ void vkt::Graphics::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
     vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
 
-uint32_t vkt::Graphics::findMemoryType(uint32_t typeFilter,
+uint32_t Graphics::findMemoryType(uint32_t typeFilter,
                                  VkMemoryPropertyFlags properties) {
     VkPhysicalDeviceMemoryProperties memProperties;
     vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
@@ -45,7 +67,7 @@ uint32_t vkt::Graphics::findMemoryType(uint32_t typeFilter,
     return -1;
 }
 
-void vkt::Graphics::createUniformBuffers() {
+void Graphics::createUniformBuffers() {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
     uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
@@ -59,7 +81,7 @@ void vkt::Graphics::createUniformBuffers() {
     }
 }
 
-void vkt::Graphics::createDescriptorSetLayout() {
+void Graphics::createDescriptorSetLayout() {
     VkDescriptorSetLayoutBinding uboLayoutBinding{};
     uboLayoutBinding.binding = 0;
     uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -76,7 +98,7 @@ void vkt::Graphics::createDescriptorSetLayout() {
                                          &descriptorSetLayout));
 }
 
-void vkt::Graphics::reset(ANativeWindow *newWindow, AAssetManager *newManager) {
+void Graphics::reset(ANativeWindow *newWindow, AAssetManager *newManager) {
     window.reset(newWindow);
     assetManager = newManager;
     if (initialized) {
@@ -85,7 +107,7 @@ void vkt::Graphics::reset(ANativeWindow *newWindow, AAssetManager *newManager) {
     }
 }
 
-void vkt::Graphics::recreateSwapChain() {
+void Graphics::recreateSwapChain() {
     vkDeviceWaitIdle(device);
     cleanupSwapChain();
     createSwapChain();
@@ -93,7 +115,7 @@ void vkt::Graphics::recreateSwapChain() {
     createFramebuffers();
 }
 
-void vkt::Graphics::render() {
+void Graphics::render() {
     if (orientationChanged) {
         onOrientationChange();
     }
@@ -178,7 +200,7 @@ void getPrerotationMatrix(const VkSurfaceCapabilitiesKHR &capabilities,
     }
 }
 
-void vkt::Graphics::createDescriptorPool() {
+void Graphics::createDescriptorPool() {
     VkDescriptorPoolSize poolSize{};
     poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
@@ -192,7 +214,7 @@ void vkt::Graphics::createDescriptorPool() {
     VK_CHECK(vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool));
 }
 
-void vkt::Graphics::createDescriptorSets() {
+void Graphics::createDescriptorSets() {
     std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT,
                                                descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo{};
@@ -223,7 +245,7 @@ void vkt::Graphics::createDescriptorSets() {
     }
 }
 
-void vkt::Graphics::updateUniformBuffer(uint32_t currentImage) {
+void Graphics::updateUniformBuffer(uint32_t currentImage) {
     SwapChainSupportDetails swapChainSupport =
             querySwapChainSupport(physicalDevice);
     UniformBufferObject ubo{};
@@ -236,12 +258,12 @@ void vkt::Graphics::updateUniformBuffer(uint32_t currentImage) {
     vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
 }
 
-void vkt::Graphics::onOrientationChange() {
+void Graphics::onOrientationChange() {
     recreateSwapChain();
     orientationChanged = false;
 }
 
-void vkt::Graphics::recordCommandBuffer(VkCommandBuffer commandBuffer,
+void Graphics::recordCommandBuffer(VkCommandBuffer commandBuffer,
                                   uint32_t imageIndex) {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -338,7 +360,7 @@ void vkt::Graphics::recordCommandBuffer(VkCommandBuffer commandBuffer,
     VK_CHECK(vkEndCommandBuffer(commandBuffer));
 }
 
-void vkt::Graphics::cleanupSwapChain() {
+void Graphics::cleanupSwapChain() {
     for (size_t i = 0; i < swapChainFramebuffers.size(); i++) {
         vkDestroyFramebuffer(device, swapChainFramebuffers[i], nullptr);
     }
@@ -350,7 +372,7 @@ void vkt::Graphics::cleanupSwapChain() {
     vkDestroySwapchainKHR(device, swapChain, nullptr);
 }
 
-void vkt::Graphics::cleanup() {
+void Graphics::cleanup() {
     vkDeviceWaitIdle(device);
     cleanupSwapChain();
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
@@ -380,7 +402,7 @@ void vkt::Graphics::cleanup() {
     initialized = false;
 }
 
-void vkt::Graphics::setupDebugMessenger() {
+void Graphics::setupDebugMessenger() {
     if (!enableValidationLayers) {
         return;
     }
@@ -392,7 +414,7 @@ void vkt::Graphics::setupDebugMessenger() {
                                           &debugMessenger));
 }
 
-bool vkt::Graphics::checkValidationLayerSupport() {
+bool Graphics::checkValidationLayerSupport() {
     uint32_t layerCount;
     vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -415,7 +437,7 @@ bool vkt::Graphics::checkValidationLayerSupport() {
     return true;
 }
 
-std::vector<const char *> vkt::Graphics::getRequiredExtensions(
+std::vector<const char *> Graphics::getRequiredExtensions(
         bool enableValidationLayers) {
     std::vector<const char *> extensions;
     extensions.push_back("VK_KHR_surface");
@@ -426,7 +448,7 @@ std::vector<const char *> vkt::Graphics::getRequiredExtensions(
     return extensions;
 }
 
-void vkt::Graphics::createInstance() {
+void Graphics::createInstance() {
     assert(!enableValidationLayers ||
            checkValidationLayerSupport());  // validation layers requested, but
     // not available!
@@ -471,7 +493,7 @@ void vkt::Graphics::createInstance() {
     }
 }
 
-void vkt::Graphics::createSurface() {
+void Graphics::createSurface() {
     assert(window != nullptr);  // window not initialized
     const VkAndroidSurfaceCreateInfoKHR create_info{
             .sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,
@@ -486,7 +508,7 @@ void vkt::Graphics::createSurface() {
 // BEGIN DEVICE SUITABILITY
 // Functions to find a suitable physical device to execute Vulkan commands.
 
-QueueFamilyIndices vkt::Graphics::findQueueFamilies(VkPhysicalDevice device) {
+QueueFamilyIndices Graphics::findQueueFamilies(VkPhysicalDevice device) {
     QueueFamilyIndices indices;
 
     uint32_t queueFamilyCount = 0;
@@ -517,7 +539,7 @@ QueueFamilyIndices vkt::Graphics::findQueueFamilies(VkPhysicalDevice device) {
     return indices;
 }
 
-bool vkt::Graphics::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+bool Graphics::checkDeviceExtensionSupport(VkPhysicalDevice device) {
     uint32_t extensionCount;
     vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount,
                                          nullptr);
@@ -536,7 +558,7 @@ bool vkt::Graphics::checkDeviceExtensionSupport(VkPhysicalDevice device) {
     return requiredExtensions.empty();
 }
 
-SwapChainSupportDetails vkt::Graphics::querySwapChainSupport(
+SwapChainSupportDetails Graphics::querySwapChainSupport(
         VkPhysicalDevice device) {
     SwapChainSupportDetails details;
 
@@ -564,7 +586,7 @@ SwapChainSupportDetails vkt::Graphics::querySwapChainSupport(
     return details;
 }
 
-bool vkt::Graphics::isDeviceSuitable(VkPhysicalDevice device) {
+bool Graphics::isDeviceSuitable(VkPhysicalDevice device) {
     QueueFamilyIndices indices = findQueueFamilies(device);
     bool extensionsSupported = checkDeviceExtensionSupport(device);
     bool swapChainAdequate = false;
@@ -576,7 +598,7 @@ bool vkt::Graphics::isDeviceSuitable(VkPhysicalDevice device) {
     return indices.isComplete() && extensionsSupported && swapChainAdequate;
 }
 
-void vkt::Graphics::pickPhysicalDevice() {
+void Graphics::pickPhysicalDevice() {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
@@ -596,7 +618,7 @@ void vkt::Graphics::pickPhysicalDevice() {
 }
 // END DEVICE SUITABILITY
 
-void vkt::Graphics::createLogicalDeviceAndQueue() {
+void Graphics::createLogicalDeviceAndQueue() {
     QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
     std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(),
@@ -645,7 +667,7 @@ void vkt::Graphics::createLogicalDeviceAndQueue() {
 
 }
 
-VkExtent2D vkt::Graphics::chooseSwapExtent(
+VkExtent2D Graphics::chooseSwapExtent(
         const VkSurfaceCapabilitiesKHR &capabilities) {
     if (capabilities.currentExtent.width !=
         std::numeric_limits<uint32_t>::max()) {
@@ -666,7 +688,7 @@ VkExtent2D vkt::Graphics::chooseSwapExtent(
     }
 }
 
-void vkt::Graphics::establishDisplaySizeIdentity() {
+void Graphics::establishDisplaySizeIdentity() {
     VkSurfaceCapabilitiesKHR capabilities;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface,
                                               &capabilities);
@@ -683,7 +705,7 @@ void vkt::Graphics::establishDisplaySizeIdentity() {
     displaySizeIdentity = capabilities.currentExtent;
 }
 
-void vkt::Graphics::createSwapChain() {
+void Graphics::createSwapChain() {
     SwapChainSupportDetails swapChainSupport =
             querySwapChainSupport(physicalDevice);
 
@@ -756,7 +778,7 @@ void vkt::Graphics::createSwapChain() {
     swapChainExtent = displaySizeIdentity;
 }
 
-void vkt::Graphics::createImageViews() {
+void Graphics::createImageViews() {
     swapChainImageViews.resize(swapChainImages.size());
     for (size_t i = 0; i < swapChainImages.size(); i++) {
         VkImageViewCreateInfo createInfo{};
@@ -778,7 +800,7 @@ void vkt::Graphics::createImageViews() {
     }
 }
 
-void vkt::Graphics::createRenderPass() {
+void Graphics::createRenderPass() {
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = swapChainImageFormat;
     colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -821,7 +843,7 @@ void vkt::Graphics::createRenderPass() {
     VK_CHECK(vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass));
 }
 
-void vkt::Graphics::createGraphicsPipeline() {
+void Graphics::createGraphicsPipeline() {
     auto vertShaderCode =
             LoadBinaryFileToVector("shaders/shader.vert.spv", assetManager);
     auto fragShaderCode =
@@ -954,7 +976,7 @@ void vkt::Graphics::createGraphicsPipeline() {
     vkDestroyShaderModule(device, vertShaderModule, nullptr);
 }
 
-VkShaderModule vkt::Graphics::createShaderModule(const std::vector<uint8_t> &code) {
+VkShaderModule Graphics::createShaderModule(const std::vector<uint8_t> &code) {
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = code.size();
@@ -968,7 +990,7 @@ VkShaderModule vkt::Graphics::createShaderModule(const std::vector<uint8_t> &cod
     return shaderModule;
 }
 
-void vkt::Graphics::createFramebuffers() {
+void Graphics::createFramebuffers() {
     swapChainFramebuffers.resize(swapChainImageViews.size());
     for (size_t i = 0; i < swapChainImageViews.size(); i++) {
         VkImageView attachments[] = {swapChainImageViews[i]};
@@ -987,7 +1009,7 @@ void vkt::Graphics::createFramebuffers() {
     }
 }
 
-void vkt::Graphics::createCommandPool() {
+void Graphics::createCommandPool() {
     QueueFamilyIndices queueFamilyIndices = findQueueFamilies(physicalDevice);
     VkCommandPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -996,7 +1018,7 @@ void vkt::Graphics::createCommandPool() {
     VK_CHECK(vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool));
 }
 
-void vkt::Graphics::createCommandBuffer() {
+void Graphics::createCommandBuffer() {
     commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -1007,7 +1029,7 @@ void vkt::Graphics::createCommandBuffer() {
     VK_CHECK(vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()));
 }
 
-void vkt::Graphics::createSyncObjects() {
+void Graphics::createSyncObjects() {
     imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
     renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
     inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);

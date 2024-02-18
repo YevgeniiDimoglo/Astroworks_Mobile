@@ -79,7 +79,7 @@ struct ANativeWindowDeleter {
     void operator()(ANativeWindow *window) { ANativeWindow_release(window); }
 };
 
-std::vector<uint8_t> LoadBinaryFileToVector(const char *file_path,
+static std::vector<uint8_t> LoadBinaryFileToVector(const char *file_path,
                                             AAssetManager *assetManager) {
     std::vector<uint8_t> file_content;
     assert(assetManager);
@@ -94,7 +94,7 @@ std::vector<uint8_t> LoadBinaryFileToVector(const char *file_path,
     return file_content;
 }
 
-const char *toStringMessageSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {
+static const char *toStringMessageSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {
     switch (s) {
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
             return "VERBOSE";
@@ -109,7 +109,7 @@ const char *toStringMessageSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {
     }
 }
 
-const char *toStringMessageType(VkDebugUtilsMessageTypeFlagsEXT s) {
+static const char *toStringMessageType(VkDebugUtilsMessageTypeFlagsEXT s) {
     if (s == (VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
               VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
               VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT))

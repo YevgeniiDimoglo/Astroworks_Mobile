@@ -2,6 +2,7 @@
 
 // Colour passed to the fragment shader
 layout(location = 0) out vec3 fragColor;
+layout(location = 1) out vec2 outUV;
 
 // Uniform buffer containing an MVP matrix.
 // Currently the vulkan backend only sets the rotation matix
@@ -23,6 +24,7 @@ vec3 colors[3] = vec3[](
 );
 
 void main() {
-    gl_Position = ubo.MVP * vec4(positions[gl_VertexIndex], 0.0, 1.0);
+    outUV = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
+    gl_Position = vec4(outUV * 2.0f - 1.0f, 0.0f, 1.0f);
     fragColor = colors[gl_VertexIndex];
 }

@@ -723,12 +723,6 @@ void Graphics::createSwapChain() {
     VkSurfaceFormatKHR surfaceFormat =
             chooseSwapSurfaceFormat(swapChainSupport.formats);
 
-    // Please check
-    // https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPresentModeKHR.html
-    // for a discourse on different present modes.
-    //
-    // VK_PRESENT_MODE_FIFO_KHR = Hard Vsync
-    // This is always supported on Android phones
     VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
 
     uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;

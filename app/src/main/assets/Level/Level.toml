@@ -1,0 +1,77 @@
+[[ActorsOnScreen]]
+name = "Skybox"
+position = [0.0,0.0,0.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [-90.0,0.0,0.0]
+scale = [1000.0,1000.0,1000.0]
+path = "/Data/Primitives/Cube.glb"
+type = "Terrain"
+typeName = "Skybox"
+domain = "Surface"
+shader = "Skybox"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Stage"
+position = [0.0,0.0,0.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [1.0,1.0,1.0]
+path = "/Data/ToImplementModels/chromaticity_pavilion.glb"
+type = "Terrian"
+typeName = "PBR"
+domain = "Surface"
+shader = "PBRIBL"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Chara"
+position = [10.5,6.0,9.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [10.0,10.0,10.0]
+path = "/Data/Primitives/Chara.glb"
+type = "Terrian"
+typeName = "PBR"
+domain = "Surface"
+shader = "PBRIBL"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Table"
+position = [7.0,5.3,9.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [1.0,1.0,1.0]
+path = "/Data/ToImplementModels/round_glass_table.glb"
+type = "Terrian"
+typeName = "PBR"
+domain = "Surface"
+shader = "PBRIBL"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Bottle"
+position = [7.0,6.7,9.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [0.03,0.03,0.03]
+path = "/Data/ToImplementModels/glass_carafe_flagon_with_cork.glb"
+type = "Terrian"
+typeName = "PBR"
+domain = "Surface"
+shader = "Transparent"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Water"
+position = [0.0,0.0,0.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [15.0,15.0,15.0]
+path = "/Data/Primitives/Water.glb"
+type = "Terrian"
+typeName = "Basic"
+domain = "Surface"
+shader = "Water"
+controller = "None"

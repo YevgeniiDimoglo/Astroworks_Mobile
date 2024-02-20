@@ -1,0 +1,12 @@
+[[ActorsOnScreen]]
+name = "Skybox"
+position = [0.0,0.0,0.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [-90.0,0.0,0.0]
+scale = [500.0,500.0,500.0]
+path = "/Data/Primitives/Cube.glb"
+type = "Terrian"
+typeName = "Skybox"
+domain = "Surface"
+shader = "Skybox"
+controller = "None"

@@ -1,0 +1,64 @@
+[[ActorsOnScreen]]
+name = "Donut"
+position = [0.0,-0.50,-5.0]
+rotation = [-0.0,-0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [1.0,1.0,1.0]
+path = "/Data/Primitives/Demo/test-torus-fancy.glb"
+type = "Terrian"
+typeName = "Transparent"
+domain = "Surface"
+shader = "Transparent"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Sphere"
+position = [0.0,-0.50,-5.0]
+rotation = [-0.0,-0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [1.0,1.0,1.0]
+path = "/Data/Primitives/Demo/sphere.glb"
+type = "Terrian"
+typeName = "Transparent"
+domain = "Surface"
+shader = "Transparent"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Sphere2"
+position = [0.0,-0.50,-5.0]
+rotation = [-0.0,-0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [0.05,0.05,0.05]
+path = "/Data/Primitives/Demo/sphere2.glb"
+type = "Terrian"
+typeName = "Transparent"
+domain = "Surface"
+shader = "Transparent"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Hyper"
+position = [0.0,-0.50,-5.0]
+rotation = [-0.0,-0.0,1.0,-0.0]
+euler = [0.0,0.0,0.0]
+scale = [1.0,1.0,1.0]
+path = "/Data/Primitives/Demo/Hyper.glb"
+type = "Terrian"
+typeName = "Transparent"
+domain = "Surface"
+shader = "Transparent"
+controller = "None"
+
+[[ActorsOnScreen]]
+name = "Display"
+position = [0.0,-3.0,-7.0]
+rotation = [-0.0,0.0,1.0,-0.0]
+euler = [0.0,-90.0,0.0]
+scale = [2.0,2.0,2.0]
+path = "/Data/Primitives/Display.glb"
+type = "Terrian"
+typeName = "PBR"
+domain = "Surface"
+shader = "PBR"
+controller = "None"

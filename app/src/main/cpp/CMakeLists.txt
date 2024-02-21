@@ -34,6 +34,9 @@ add_library(${PROJECT_NAME} SHARED
         Utilities.h
         Graphics.h
         Graphics.cpp
+        Texture.h
+        Sprite.h
+        Sprite.cpp
         vk_main.cpp)
 
 # add lib dependencies

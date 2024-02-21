@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstring>
+#include <string>
 #include <cstdlib>
 #include <cstdint>
 #include <utility>
@@ -129,5 +130,11 @@ static const char *toStringMessageType(VkDebugUtilsMessageTypeFlagsEXT s) {
     if (s == VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT) return "General";
     return "Unknown";
 }
+
+class IObserver {
+public:
+    virtual ~IObserver() {};
+    virtual void notify(std::string name, int action) = 0;
+};
 
 #endif //HELLO_VULKAN_UTILITIES_H

@@ -238,7 +238,7 @@ Sprite::Image Sprite::createTextureFromBuffer(void* buffer, VkDeviceSize bufferS
     samplerInfo.maxLod = 0.0f;
 
     VkSampler imageSampler;
-    VK_CHECK(vkCreateSampler(newLogicalDevice, &samplerInfo, nullptr, &imageSampler));
+    vkCreateSampler(newLogicalDevice, &samplerInfo, nullptr, &imageSampler);
 
     image.sampler = imageSampler;
 
@@ -254,7 +254,7 @@ Sprite::Image Sprite::createTextureFromBuffer(void* buffer, VkDeviceSize bufferS
     viewInfo.subresourceRange.layerCount = 1;
 
     VkImageView imageView;
-    VK_CHECK(vkCreateImageView(newLogicalDevice, &viewInfo, nullptr, &imageView));
+    vkCreateImageView(newLogicalDevice, &viewInfo, nullptr, &imageView);
 
     image.view = imageView;
 

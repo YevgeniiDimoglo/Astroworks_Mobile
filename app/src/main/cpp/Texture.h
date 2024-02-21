@@ -2,12 +2,10 @@
 // Created by Yujin on 2024/02/21.
 //
 
-#include "Utilities.h"
-
-#include "external/stb_image.h"
-
 #ifndef ASTROWORKS_MOBILE_TEXTURE_H
 #define ASTROWORKS_MOBILE_TEXTURE_H
+
+#include "Utilities.h"
 
 static bool hasStencilComponent(VkFormat format)
 {
@@ -38,7 +36,7 @@ static void createBuffer(VkPhysicalDevice physicalDevice, VkDevice device, VkDev
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-    VK_CHECK(vkCreateBuffer(device, &bufferInfo, nullptr, &buffer));
+    vkCreateBuffer(device, &bufferInfo, nullptr, &buffer);
 
     VkMemoryRequirements memRequirements;
     vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
@@ -48,7 +46,7 @@ static void createBuffer(VkPhysicalDevice physicalDevice, VkDevice device, VkDev
     allocInfo.allocationSize = memRequirements.size;
     allocInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-    VK_CHECK(vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory));
+    vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory);
 
     vkBindBufferMemory(device, buffer, bufferMemory, 0);
 };
@@ -120,7 +118,7 @@ static void createImage(VkPhysicalDevice physicalDevice, VkDevice device, uint32
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.flags = 0;
 
-    VK_CHECK(vkCreateImage(device, &imageInfo, nullptr, &image));
+    vkCreateImage(device, &imageInfo, nullptr, &image);
 
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(device, image, &memRequirements);
@@ -157,7 +155,7 @@ static VkImage createImage(VkPhysicalDevice physicalDevice, VkDevice device, uin
     imageInfo.flags = 0;
 
     VkImage image;
-    VK_CHECK(vkCreateImage(device, &imageInfo, nullptr, &image));
+    vkCreateImage(device, &imageInfo, nullptr, &image);
 
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(device, image, &memRequirements);
@@ -167,7 +165,7 @@ static VkImage createImage(VkPhysicalDevice physicalDevice, VkDevice device, uin
     allocInfo.allocationSize = memRequirements.size;
     allocInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-    VK_CHECK(vkAllocateMemory(device, &allocInfo, nullptr, &imageMemory));
+    vkAllocateMemory(device, &allocInfo, nullptr, &imageMemory);
 
     vkBindImageMemory(device, image, imageMemory, 0);
 
@@ -188,7 +186,7 @@ static VkImageView createImageView(VkDevice device, VkImage image, VkFormat form
     viewInfo.subresourceRange.layerCount = 1;
 
     VkImageView imageView;
-    VK_CHECK(vkCreateImageView(device, &viewInfo, nullptr, &imageView));
+    vkCreateImageView(device, &viewInfo, nullptr, &imageView);
     return imageView;
 }
 
@@ -339,7 +337,7 @@ static ImageBuffer createTexture(VkPhysicalDevice newPhysicalDevice, VkDevice ne
     samplerInfo.maxLod = 0.0f;
 
     VkSampler imageSampler;
-    VK_CHECK(vkCreateSampler(newLogicalDevice, &samplerInfo, nullptr, &imageSampler));
+    vkCreateSampler(newLogicalDevice, &samplerInfo, nullptr, &imageSampler);
 
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -353,7 +351,7 @@ static ImageBuffer createTexture(VkPhysicalDevice newPhysicalDevice, VkDevice ne
     viewInfo.subresourceRange.layerCount = 1;
 
     VkImageView imageView;
-    VK_CHECK(vkCreateImageView(newLogicalDevice, &viewInfo, nullptr, &imageView));
+    vkCreateImageView(newLogicalDevice, &viewInfo, nullptr, &imageView);
 
     VkDescriptorSet descriptorSet;
 

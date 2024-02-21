@@ -40,11 +40,134 @@
 #include "glm/gtc/type_ptr.hpp"
 
 // Loader libs
+#define STB_IMAGE_IMPLEMENTATION
+#include "external/stb_image.h"
 #include "external/json.hpp"
 #include "external/toml.hpp"
 
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
+
+static const int MAX_OBJECTS = 512;
+
+static const uint32_t PARTICLE_COUNT = 8192;
+
+static const uint32_t WIDTH = 1920;
+static const uint32_t HEIGHT = 1080;
+
+static const int syncInterval = 0;
+
+static std::filesystem::path pathToProgram;
+
+enum class Pipelines
+{
+    ShadowMapPipeline,
+
+    DebugDrawingPipeline,
+
+    UnlitPipeline,
+    PhongPipeline,
+    PBRPipeline,
+    PBRIBLPipeline,
+
+    UIPipeline,
+
+    OffscreenPipeline,
+    OffscreenPipeline2,
+
+    OITColorAccumPipeline,
+    OITColorRevealPipeline,
+    OITResultPipeline,
+    DemoOITColorAccumPipeline,
+    DemoOITColorRevealPipeline,
+    DemoOITResultPipeline,
+
+    SkyboxPipeline,
+
+    LuminancePipeline,
+    BlurPipeline,
+
+    WaterPipeline,
+    FirePipeline,
+
+    ComputeParticlePipeline,
+
+    EnumCount
+};
+
+enum class ShaderType
+{
+    Unlit,
+    Flat,
+    Phong,
+    PBR,
+    PBRIBL,
+
+    OITColorAccum,
+    OITColorReveal,
+    OITResult,
+
+    Skybox,
+
+    Sprite,
+
+    Water,
+    Fireball,
+
+    EnumCount
+};
+
+enum class TextureType
+{
+    Albedo = 0,
+    Normal,
+    Metalness,
+    Roughness,
+    AmbientOcclussion,
+    Emissive,
+
+    LUT,
+
+    GlobalTexture1,
+    NoiseTexture1,
+    NoiseTexture2,
+
+    EnumCount
+};
+
+struct ImageBuffer
+{
+    VkImage					image;
+    VkImageLayout			imageLayout;
+    VkDeviceMemory			deviceMemory;
+    VkImageView				view;
+    uint32_t				width, height;
+    VkDescriptorImageInfo	descriptor;
+    VkSampler				sampler;
+    VkDescriptorSet			descriptorSet;
+};
+
+struct FrameBufferAttachment {
+    VkImage image;
+    VkDeviceMemory mem;
+    VkImageView view;
+};
+
+struct Framebuffer
+{
+    int32_t width, height;
+    FrameBufferAttachment offscreenColorAttachment, offscreenDepthAttachment;
+    VkSampler sampler;
+    VkDescriptorImageInfo descriptor;
+    VkDescriptorSet			descriptorSet;
+};
+
+struct PushConstants {
+    glm::mat4 model;
+    glm::vec4 baseColor;
+    glm::vec4 timer;
+    glm::vec4 additionalValues;
+};
 
 struct UniformBufferObject {
     std::array<float, 16> mvp;
@@ -76,23 +199,10 @@ struct SwapChainSupportDetails {
     }                                         \
   } while (0)
 
-struct ANativeWindowDeleter {
-    void operator()(ANativeWindow *window) { ANativeWindow_release(window); }
-};
-
-static std::vector<uint8_t> LoadBinaryFileToVector(const char *file_path,
-                                            AAssetManager *assetManager) {
-    std::vector<uint8_t> file_content;
-    assert(assetManager);
-    AAsset *file =
-            AAssetManager_open(assetManager, file_path, AASSET_MODE_BUFFER);
-    size_t file_length = AAsset_getLength(file);
-
-    file_content.resize(file_length);
-
-    AAsset_read(file, file_content.data(), file_length);
-    AAsset_close(file);
-    return file_content;
+template<typename ...Args>
+static void LOG(Args && ...args)
+{
+    (std::cout << ... << args);
 }
 
 static const char *toStringMessageSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {

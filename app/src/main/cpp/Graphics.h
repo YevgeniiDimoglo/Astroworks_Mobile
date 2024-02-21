@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
+#ifndef ASTROWORKS_GRAPHICS_SPRITE_H
+#define ASTROWORKS_GRAPHICS_SPRITE_H
+
 #include <android/asset_manager.h>
 #include <android/log.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 
 #include "Utilities.h"
+#include "Support.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL
 debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -213,3 +217,5 @@ private:
     bool orientationChanged = false;
     VkSurfaceTransformFlagBitsKHR pretransformFlag;
 };
+
+#endif //ASTROWORKS_MOBILE_GRAPHICS_H

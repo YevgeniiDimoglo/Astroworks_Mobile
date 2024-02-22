@@ -33,11 +33,13 @@ add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR=1)
 add_library(${PROJECT_NAME} SHARED
         Support.h
         Utilities.h
+        ResourceManager.h
         Graphics.h
         Graphics.cpp
         Texture.h
         Sprite.h
-        Sprite.cpp
+        UI/UI.h
+        UI/UI.cpp
         vk_main.cpp)
 
 # add lib dependencies

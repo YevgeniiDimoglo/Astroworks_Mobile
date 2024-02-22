@@ -4,6 +4,8 @@
 
 #include "Sprite.h"
 
+#include "external/stb_image.h"
+
 Sprite::Sprite(std::string filePath)
 {
     std::size_t found = filePath.find_last_of("/\\");

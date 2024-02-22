@@ -23,7 +23,14 @@
 
 #include <iostream>
 
+#define STBI_NO_SIMD
+#define STB_IMAGE_IMPLEMENTATION
+#include "external/stb_image.h"
+
 #include "Graphics.h"
+#include "ResourceManager.h"
+
+#include "UI/UI.h"
 
 /*
  * Shared state for the app. This will be accessed within lifecycle callbacks
@@ -56,6 +63,7 @@ static void HandleCmd(struct android_app *app, int32_t cmd) {
       if (engine->app->window != nullptr) {
         engine->app_backend->reset(app->window, app->activity->assetManager);
         engine->app_backend->initVulkan();
+        UI::Instance().setFileNames(ResourceManager::Instance().loadFilePathes("./Data/UI/"));
         engine->canRender = true;
       }
     case APP_CMD_INIT_WINDOW:

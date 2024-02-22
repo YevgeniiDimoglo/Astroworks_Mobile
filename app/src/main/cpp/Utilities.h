@@ -40,11 +40,10 @@
 #include "glm/gtc/type_ptr.hpp"
 
 // Loader libs
-#define STB_IMAGE_IMPLEMENTATION
-#include "external/stb_image.h"
 #include "external/json.hpp"
 #include "external/toml.hpp"
 
+#include "HighResolutionTimer.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 

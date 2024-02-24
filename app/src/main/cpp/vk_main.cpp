@@ -23,10 +23,13 @@
 
 #include <iostream>
 
-#include "Graphics.h"
-#include "ResourceManager.h"
-
 #include "UI/UI.h"
+#include "ResourceManager.h"
+#include "Graphics.h"
+
+#define STBI_NO_SIMD
+#define STB_IMAGE_IMPLEMENTATION
+#include "external/stb_image.h"
 
 /*
  * Shared state for the app. This will be accessed within lifecycle callbacks

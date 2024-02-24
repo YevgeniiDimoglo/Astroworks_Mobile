@@ -45,8 +45,6 @@
 
 #include "HighResolutionTimer.h"
 
-#define STBI_NO_SIMD
-#define STB_IMAGE_IMPLEMENTATION
 #include "external/stb_image.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;

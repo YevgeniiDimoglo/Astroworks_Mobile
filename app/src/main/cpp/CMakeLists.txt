@@ -31,16 +31,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wall")
 add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR=1)
 
 add_library(${PROJECT_NAME} SHARED
-        Support.h
-        Utilities.h
-        ResourceManager.h
-        Graphics.h
+        vk_main.cpp
         Graphics.cpp
-        Texture.h
-        Sprite.h
-        UI/UI.h
+        Sprite.cpp
         UI/UI.cpp
-        vk_main.cpp)
+        )
 
 # add lib dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC

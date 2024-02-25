@@ -4,6 +4,8 @@
 
 #include "Graphics.h"
 
+#include "UI/UI.h"
+
 void Graphics::initVulkan() {
     createInstance();
     createSurface();
@@ -14,9 +16,9 @@ void Graphics::initVulkan() {
     createSwapChain();
     createImageViews();
     //createRenderPass();
-    createDescriptorSetLayout();
+    createDescriptorSetLayouts();
     createUniformBuffers();
-    createDescriptorPool();
+    createDescriptorPools();
     createDescriptorSets();
     createGraphicsPipeline();
     //createFramebuffers();
@@ -81,7 +83,7 @@ void Graphics::createUniformBuffers() {
     }
 }
 
-void Graphics::createDescriptorSetLayout() {
+void Graphics::createDescriptorSetLayouts() {
     VkDescriptorSetLayoutBinding uboLayoutBinding{};
     uboLayoutBinding.binding = 0;
     uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -96,6 +98,23 @@ void Graphics::createDescriptorSetLayout() {
 
     VK_CHECK(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr,
                                          &descriptorSetLayout));
+
+    std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings = {
+            { 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+            { 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+            { 2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+            { 3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+            { 4, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+            { 5, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+            { 6, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr },
+    };
+
+    VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
+    descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    descriptorSetLayoutCreateInfo.pBindings = setLayoutBindings.data();
+    descriptorSetLayoutCreateInfo.bindingCount = static_cast<uint32_t>(setLayoutBindings.size());
+
+    VK_CHECK(vkCreateDescriptorSetLayout(device, &descriptorSetLayoutCreateInfo, nullptr, &samplerSetLayout));
 }
 
 void Graphics::reset(ANativeWindow *newWindow, AAssetManager *newManager) {
@@ -200,7 +219,8 @@ void getPrerotationMatrix(const VkSurfaceCapabilitiesKHR &capabilities,
     }
 }
 
-void Graphics::createDescriptorPool() {
+void Graphics::createDescriptorPools() {
+
     VkDescriptorPoolSize poolSize{};
     poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
@@ -212,6 +232,21 @@ void Graphics::createDescriptorPool() {
     poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
     VK_CHECK(vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool));
+
+
+    // Create sampler descriptor pool
+    VkDescriptorPoolSize samplerPoolSize = {};
+    samplerPoolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    samplerPoolSize.descriptorCount = MAX_OBJECTS * 7;
+
+    VkDescriptorPoolCreateInfo samplerPoolCreateInfo = {};
+    samplerPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    samplerPoolCreateInfo.maxSets = MAX_OBJECTS * 7;
+    samplerPoolCreateInfo.poolSizeCount = 1;
+    samplerPoolCreateInfo.pPoolSizes = &samplerPoolSize;
+
+    VK_CHECK(vkCreateDescriptorPool(device, &samplerPoolCreateInfo, nullptr, &samplerDescriptorPool));
+
 }
 
 void Graphics::createDescriptorSets() {
@@ -1043,4 +1078,17 @@ void Graphics::createSyncObjects() {
 
         VK_CHECK(vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]));
     }
+}
+
+void Graphics::initEngine() {
+    initVulkan();
+
+    initSprites();
+}
+
+void Graphics::initSprites()
+{
+    LOG("Initialization of Sprites\n");
+
+    UI::Instance().loadFiles(physicalDevice, device, graphicsQueue, commandPool, samplerDescriptorPool, samplerSetLayout);
 }

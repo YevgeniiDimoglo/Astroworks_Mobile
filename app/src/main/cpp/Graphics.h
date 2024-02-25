@@ -81,7 +81,7 @@ public:
 
     VkPhysicalDeviceDynamicRenderingFeaturesKHR enabledDynamicRenderingFeaturesKHR{};
 
-    void initVulkan();
+    void initEngine();
 
     void render();
 
@@ -94,6 +94,10 @@ public:
     bool initialized = false;
 
 private:
+
+    void initVulkan();
+    void initSprites();
+
     void createDevice();
 
     void createInstance();
@@ -112,7 +116,7 @@ private:
 
     void createRenderPass();
 
-    void createDescriptorSetLayout();
+    void createDescriptorSetLayouts();
 
     void createGraphicsPipeline();
 
@@ -157,7 +161,7 @@ private:
 
     void updateUniformBuffer(uint32_t currentImage);
 
-    void createDescriptorPool();
+    void createDescriptorPools();
 
     void createDescriptorSets();
 
@@ -201,6 +205,7 @@ private:
 
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
+    VkDescriptorSetLayout samplerSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
@@ -211,6 +216,7 @@ private:
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
     VkDescriptorPool descriptorPool;
+    VkDescriptorPool samplerDescriptorPool;
     std::vector<VkDescriptorSet> descriptorSets;
 
     uint32_t currentFrame = 0;

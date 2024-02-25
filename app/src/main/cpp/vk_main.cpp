@@ -24,6 +24,7 @@
 #include <iostream>
 
 #include "UI/UI.h"
+#include "UI/OverlayTitle.h"
 #include "ResourceManager.h"
 #include "Graphics.h"
 
@@ -61,8 +62,9 @@ static void HandleCmd(struct android_app *app, int32_t cmd) {
     case APP_CMD_START:
       if (engine->app->window != nullptr) {
         engine->app_backend->reset(app->window, app->activity->assetManager);
-        engine->app_backend->initVulkan();
-        UI::Instance().setFileNames(ResourceManager::Instance().loadFilePathes("./Data/UI/"));
+        engine->app_backend->initEngine();
+        UI::Instance().setFileNames(ResourceManager::Instance().loadFilePathes("res/drawable/"));
+        UI::Instance().changeOverlay(std::make_unique<OverlayTitle>());
         engine->canRender = true;
       }
     case APP_CMD_INIT_WINDOW:
@@ -73,7 +75,7 @@ static void HandleCmd(struct android_app *app, int32_t cmd) {
         engine->app_backend->reset(app->window, app->activity->assetManager);
         if (!engine->app_backend->initialized) {
           LOGI("Starting application");
-          engine->app_backend->initVulkan();
+          engine->app_backend->initEngine();
         }
         engine->canRender = true;
       }

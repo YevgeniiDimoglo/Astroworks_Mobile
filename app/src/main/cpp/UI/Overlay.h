@@ -5,7 +5,7 @@
 #ifndef ASTROWORKS_MOBILE_OVERLAY_H
 #define ASTROWORKS_MOBILE_OVERLAY_H
 
-#include "UIUtilites.h"
+#include "../Utilities.h"
 
 class Widget;
 

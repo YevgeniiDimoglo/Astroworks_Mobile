@@ -5,8 +5,6 @@
 #ifndef ASTROWORKS_MOBILE_OVERLAYTITLE_H
 #define ASTROWORKS_MOBILE_OVERLAYTITLE_H
 
-#include "../Utilities.h"
-
 #include "UIUtilites.h"
 
 class OverlayTitle : public Overlay

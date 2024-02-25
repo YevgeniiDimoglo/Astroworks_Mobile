@@ -2,10 +2,10 @@
 // Created by Yujin on 2024/02/21.
 //
 
-#include "../../Utilities.h"
-
 #ifndef ASTROWORKS_MOBILE_WIDGET_H
 #define ASTROWORKS_MOBILE_WIDGET_H
+
+#include "../../Utilities.h"
 
 class Widget
 {

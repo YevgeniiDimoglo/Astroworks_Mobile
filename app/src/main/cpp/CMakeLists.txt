@@ -35,6 +35,8 @@ add_library(${PROJECT_NAME} SHARED
         Graphics.cpp
         Sprite.cpp
         UI/UI.cpp
+        UI/OverlayTitle.cpp
+        UI/Elements/Image.cpp
         )
 
 # add lib dependencies

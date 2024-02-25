@@ -62,36 +62,36 @@ static std::filesystem::path pathToProgram;
 
 enum class Pipelines
 {
-    ShadowMapPipeline,
+    //ShadowMapPipeline,
 
     DebugDrawingPipeline,
 
-    UnlitPipeline,
-    PhongPipeline,
-    PBRPipeline,
-    PBRIBLPipeline,
+    //UnlitPipeline,
+    //PhongPipeline,
+    //PBRPipeline,
+    //PBRIBLPipeline,
 
     UIPipeline,
 
-    OffscreenPipeline,
-    OffscreenPipeline2,
+    //OffscreenPipeline,
+    //OffscreenPipeline2,
 
-    OITColorAccumPipeline,
-    OITColorRevealPipeline,
-    OITResultPipeline,
-    DemoOITColorAccumPipeline,
-    DemoOITColorRevealPipeline,
-    DemoOITResultPipeline,
+    //OITColorAccumPipeline,
+    //OITColorRevealPipeline,
+    //OITResultPipeline,
+    //DemoOITColorAccumPipeline,
+    //DemoOITColorRevealPipeline,
+    //DemoOITResultPipeline,
 
-    SkyboxPipeline,
+    //SkyboxPipeline,
 
-    LuminancePipeline,
-    BlurPipeline,
+    //LuminancePipeline,
+    //BlurPipeline,
 
-    WaterPipeline,
-    FirePipeline,
+    //WaterPipeline,
+    //FirePipeline,
 
-    ComputeParticlePipeline,
+    //ComputeParticlePipeline,
 
     EnumCount
 };

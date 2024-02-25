@@ -118,7 +118,7 @@ private:
 
     void createDescriptorSetLayouts();
 
-    void createGraphicsPipeline();
+    void createGraphicsPipelines();
 
     void createFramebuffers();
 
@@ -206,8 +206,8 @@ private:
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
     VkDescriptorSetLayout samplerSetLayout;
-    VkPipelineLayout pipelineLayout;
-    VkPipeline graphicsPipeline;
+    std::vector<VkPipelineLayout> pipelineLayouts;
+    std::vector<VkPipeline> graphicsPipelines;
 
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;

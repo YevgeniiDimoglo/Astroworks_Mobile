@@ -1118,7 +1118,7 @@ void Graphics::initEngine() {
 
 void Graphics::initSprites()
 {
-    LOG("Initialization of Sprites\n");
+    LOGI("Initialization of Sprites");
 
     UI::Instance().loadFiles(physicalDevice, device, graphicsQueue, commandPool, samplerDescriptorPool, samplerSetLayout);
 }

@@ -54,7 +54,7 @@ void Sprite::loadFile(VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDev
     std::string fileLoc = filePath;
     stbi_uc* image = stbi_load(fileLoc.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
-    LOG("Loading sprite: " + filePath + "\n");
+    //LOGI("Loading sprite: " + filePath);
 
     imageSize = width * height * 4;
 

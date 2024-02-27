@@ -63,8 +63,6 @@ static void HandleCmd(struct android_app *app, int32_t cmd) {
       if (engine->app->window != nullptr) {
         engine->app_backend->reset(app->window, app->activity->assetManager);
         engine->app_backend->initEngine();
-        UI::Instance().setFileNames(ResourceManager::Instance().loadFilePathes("res/drawable/"));
-        UI::Instance().changeOverlay(std::make_unique<OverlayTitle>());
         engine->canRender = true;
       }
     case APP_CMD_INIT_WINDOW:
@@ -75,6 +73,8 @@ static void HandleCmd(struct android_app *app, int32_t cmd) {
         engine->app_backend->reset(app->window, app->activity->assetManager);
         if (!engine->app_backend->initialized) {
           LOGI("Starting application");
+          UI::Instance().setFileNames(ResourceManager::Instance().loadFilePathes("res/drawable/"));
+          UI::Instance().changeOverlay(std::make_unique<OverlayTitle>());
           engine->app_backend->initEngine();
         }
         engine->canRender = true;

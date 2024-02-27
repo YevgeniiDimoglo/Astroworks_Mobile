@@ -200,12 +200,6 @@ struct SwapChainSupportDetails {
     }                                         \
   } while (0)
 
-template<typename ...Args>
-static void LOG(Args && ...args)
-{
-    (std::cout << ... << args);
-}
-
 static const char *toStringMessageSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT s) {
     switch (s) {
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:

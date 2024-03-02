@@ -28,6 +28,12 @@ public:
         return newFilePathes;
     }
 
+    std::vector<std::string> loadFilePathesAndroid(std::string folderPath) {
+        std::vector<std::string> newFilePathes;
+
+        return newFilePathes;
+    }
+
     //std::map<std::string, std::vector<ActorOnScreen>> getActorsOnLevel() const { return actorsOnLevel; }
     //std::vector<ActorOnScreen> getActorsOnScreen(std::string LevelName) { return actorsOnLevel[LevelName]; }
 

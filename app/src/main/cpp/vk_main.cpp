@@ -73,7 +73,7 @@ static void HandleCmd(struct android_app *app, int32_t cmd) {
         engine->app_backend->reset(app->window, app->activity->assetManager);
         if (!engine->app_backend->initialized) {
           LOGI("Starting application");
-          //UI::Instance().setFileNames(ResourceManager::Instance().loadFilePathes("res/drawable/"));
+          //UI::Instance().setFileNamesAndroid(ResourceManager::Instance().loadFilePathesAndroid("assets/Textures"));
           UI::Instance().changeOverlay(std::make_unique<OverlayTitle>());
           engine->app_backend->initEngine();
         }

@@ -27,6 +27,8 @@ public:
 
     void setFileNames(std::vector<std::string> filePathes) { fileNames = filePathes; }
 
+    void setFileNamesAndroid(std::vector<std::string> filePathes) { fileNames = filePathes; }
+
     std::vector<std::shared_ptr<Sprite>> getSprites() const { return sprites; }
 
     Overlay& getCurrentOverlay() const { return *this->currentOverlay; }

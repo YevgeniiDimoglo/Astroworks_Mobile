@@ -5,6 +5,8 @@
 #ifndef ASTROWORKS_MOBILE_SPRITE_H
 #define ASTROWORKS_MOBILE_SPRITE_H
 
+#include <android/asset_manager.h>
+
 #include "Utilities.h"
 #include "Texture.h"
 
@@ -94,7 +96,7 @@ public:
     float getGColor() const { return b; }
     float getAColor() const { return a; }
 
-    void loadFile(VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout);
+    void loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout);
     void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout);
 
     void updateTransform();

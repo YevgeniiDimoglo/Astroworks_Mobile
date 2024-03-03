@@ -5,6 +5,8 @@
 #ifndef HELLO_VULKAN_UTILITIES_H
 #define HELLO_VULKAN_UTILITIES_H
 
+#include "android/log.h"
+
 // STD libs
 #include <filesystem>
 #include <iostream>
@@ -59,6 +61,11 @@ static const uint32_t HEIGHT = 1080;
 static const int syncInterval = 0;
 
 static std::filesystem::path pathToProgram;
+
+#define TUTORIAL_TEXTURE_COUNT 1
+static const char* texFiles[TUTORIAL_TEXTURE_COUNT] = {
+        "titlebg.png",
+};
 
 enum class Pipelines
 {
@@ -188,9 +195,10 @@ struct SwapChainSupportDetails {
     std::vector<VkPresentModeKHR> presentModes;
 };
 
-#define LOG_TAG "hellovkjni"
+#define LOG_TAG "Astroworks"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+//__android_log_print(ANDROID_LOG_INFO, "MyTag", "The value is %d", some_variable);
 #define VK_CHECK(x)                           \
   do {                                        \
     VkResult err = x;                         \

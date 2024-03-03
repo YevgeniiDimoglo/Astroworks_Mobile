@@ -21,7 +21,7 @@ Sprite::Sprite(std::string filePath)
     this->fileType = fileType;
 }
 
-void Sprite::loadFile(VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout)
+void Sprite::loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout)
 {
     this->newPhysicalDevice = newPhysicalDevice;
     this->newLogicalDevice = newLogicalDevice;
@@ -50,20 +50,47 @@ void Sprite::loadFile(VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDev
     int channels;
     VkDeviceSize imageSize;
 
-    // Load pixel data for image
-    std::string fileLoc = filePath;
-    stbi_uc* image = stbi_load(fileLoc.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+    LOGI("Loading sprite");
 
-    //LOGI("Loading sprite: " + filePath);
+    const char* dirName = "Textures";
+    AAssetDir* dir = AAssetManager_openDir(assetManager, dirName);
 
-    imageSize = width * height * 4;
+    const char *name = nullptr;
 
-    createTextureFromBuffer(image, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
+    while((name = AAssetDir_getNextFileName(dir)) != NULL)
+    {
+        __android_log_print(ANDROID_LOG_INFO, "MyTag", "The value is %s", name);
+        __android_log_print(ANDROID_LOG_INFO, "MyTag", "Other value is %s", (fileName + "." + fileType).c_str());
+        if(strcmp(name,(fileName + "." + fileType).c_str()))
+        {
+            __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File %s", fileName.c_str());
 
-    indices.count = static_cast<uint32_t>(indexBuffer.size());
+            AAsset* file = AAssetManager_open(assetManager,
+                                              (fileName + "." + fileType).c_str(), AASSET_MODE_BUFFER);
+            size_t fileLength = AAsset_getLength(file);
+            stbi_uc* fileContent = new unsigned char[fileLength];
+            AAsset_read(file, fileContent, fileLength);
+            AAsset_close(file);
 
-    createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
-    createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
+            uint32_t imgWidth, imgHeight, n;
+            unsigned char* imageData = stbi_load_from_memory(
+                    fileContent, fileLength, reinterpret_cast<int*>(&imgWidth),
+                    reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
+            assert(n == 4);
+
+            imageSize = width * height * 4;
+
+            createTextureFromBuffer(imageData, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
+
+            indices.count = static_cast<uint32_t>(indexBuffer.size());
+
+            createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
+            createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
+        }
+
+    }
+
+    AAssetDir_close(dir);
 }
 
 void Sprite::draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout)

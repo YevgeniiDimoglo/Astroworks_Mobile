@@ -30,7 +30,9 @@ public:
 
     std::vector<std::string> loadFilePathesAndroid(std::string folderPath) {
         std::vector<std::string> newFilePathes;
-
+        for (int i = 0; i < TUTORIAL_TEXTURE_COUNT; ++i) {
+            newFilePathes.push_back(texFiles[i]);
+        }
         return newFilePathes;
     }
 

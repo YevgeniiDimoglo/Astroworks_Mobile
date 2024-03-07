@@ -57,38 +57,30 @@ void Sprite::loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalD
 
     const char *name = nullptr;
 
-    while((name = AAssetDir_getNextFileName(dir)) != NULL)
-    {
-        __android_log_print(ANDROID_LOG_INFO, "MyTag", "The value is %s", name);
-        __android_log_print(ANDROID_LOG_INFO, "MyTag", "Other value is %s", (fileName + "." + fileType).c_str());
-        if(strcmp(name,(fileName + "." + fileType).c_str()))
-        {
-            __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File %s", fileName.c_str());
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File %s", fileName.c_str());
 
-            AAsset* file = AAssetManager_open(assetManager,
-                                              (fileName + "." + fileType).c_str(), AASSET_MODE_BUFFER);
-            size_t fileLength = AAsset_getLength(file);
-            stbi_uc* fileContent = new unsigned char[fileLength];
-            AAsset_read(file, fileContent, fileLength);
-            AAsset_close(file);
+    AAsset* file = AAssetManager_open(assetManager,
+                                      (fileName + "." + fileType).c_str(), AASSET_MODE_BUFFER);
+    size_t fileLength = AAsset_getLength(file);
+    stbi_uc* fileContent = new unsigned char[fileLength];
+    AAsset_read(file, fileContent, fileLength);
+    AAsset_close(file);
 
-            uint32_t imgWidth, imgHeight, n;
-            unsigned char* imageData = stbi_load_from_memory(
-                    fileContent, fileLength, reinterpret_cast<int*>(&imgWidth),
-                    reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
-            assert(n == 4);
+    uint32_t imgWidth, imgHeight, n;
+    unsigned char* imageData = stbi_load_from_memory(
+            fileContent, fileLength, reinterpret_cast<int*>(&imgWidth),
+            reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
+    assert(n == 4);
 
-            imageSize = width * height * 4;
+    imageSize = width * height * 4;
 
-            createTextureFromBuffer(imageData, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
+    createTextureFromBuffer(imageData, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
 
-            indices.count = static_cast<uint32_t>(indexBuffer.size());
+    indices.count = static_cast<uint32_t>(indexBuffer.size());
 
-            createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
-            createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
-        }
+    createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
+    createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
 
-    }
 
     AAssetDir_close(dir);
 }

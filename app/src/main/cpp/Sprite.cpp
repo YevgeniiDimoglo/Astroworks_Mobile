@@ -53,36 +53,60 @@ void Sprite::loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalD
     LOGI("Loading sprite");
 
     const char* dirName = "Textures";
-    AAssetDir* dir = AAssetManager_openDir(assetManager, dirName);
+    AAssetDir* assetDir = AAssetManager_openDir(assetManager, dirName);
 
     const char *name = nullptr;
 
-    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File %s", fileName.c_str());
+    while ((name = AAssetDir_getNextFileName(assetDir)) != NULL)
+    {
+        __android_log_print(ANDROID_LOG_INFO, "MyTag", "File in Folder %s", name);
 
-    AAsset* file = AAssetManager_open(assetManager,
-                                      (fileName + "." + fileType).c_str(), AASSET_MODE_BUFFER);
-    size_t fileLength = AAsset_getLength(file);
-    stbi_uc* fileContent = new unsigned char[fileLength];
-    AAsset_read(file, fileContent, fileLength);
-    AAsset_close(file);
+        if(!strcmp(name, (fileName + "." + fileType).c_str()))
+        {
+            __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File Name %s", (fileName + "." + fileType).c_str());
 
-    uint32_t imgWidth, imgHeight, n;
-    unsigned char* imageData = stbi_load_from_memory(
-            fileContent, fileLength, reinterpret_cast<int*>(&imgWidth),
-            reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
-    assert(n == 4);
+            AAsset* file = AAssetManager_open(assetManager,
+                                              name, AASSET_MODE_STREAMING);
+            if(!file)
+            {
+                __android_log_print(ANDROID_LOG_INFO, "MyTag", "Failed to load asset %s", name);
 
-    imageSize = width * height * 4;
+                FILE* asset = fopen(name, "w");
 
-    createTextureFromBuffer(imageData, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
+                if(asset == nullptr)
+                {
+                    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Failed to load file asset %s", name);
+                }
+                else
+                {
+                    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Load file asset %s", name);
+                }
+                return;
+            }
+            size_t fileLength = AAsset_getLength(file);
 
-    indices.count = static_cast<uint32_t>(indexBuffer.size());
+            stbi_uc* fileContent = new unsigned char[fileLength];
+            AAsset_read(file, fileContent, fileLength);
+            AAsset_close(file);
 
-    createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
-    createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
+            uint32_t imgWidth, imgHeight, n;
+            unsigned char* imageData = stbi_load_from_memory(
+                    fileContent, fileLength, reinterpret_cast<int*>(&imgWidth),
+                    reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
 
+            imageSize = width * height * 4;
 
-    AAssetDir_close(dir);
+            createTextureFromBuffer(imageData, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
+
+            indices.count = static_cast<uint32_t>(indexBuffer.size());
+
+            createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
+            createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
+
+            AAssetDir_close(assetDir);
+        }
+    }
+
 }
 
 void Sprite::draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout)

@@ -52,46 +52,37 @@ void Sprite::loadFile(AAssetManager& assetManager, VkPhysicalDevice newPhysicalD
 
     LOGI("Loading sprite");
 
-    const char* dirName = "Textures";
-    AAssetDir* assetDir = AAssetManager_openDir(&assetManager, dirName);
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File Name %s", (fileName + "." + fileType).c_str());
 
-    const char *name = nullptr;
+    AAsset* asset = AAssetManager_open(&assetManager,
+                                       (fileName + "." + fileType).c_str(), AASSET_MODE_STREAMING);
 
-    while ((name = AAssetDir_getNextFileName(assetDir)) != NULL)
-    {
-        __android_log_print(ANDROID_LOG_INFO, "MyTag", "File in Folder %s", name);
+    size_t fileLength = AAsset_getLength(asset);
+    unsigned char *data = new unsigned char[fileLength];
+    AAsset_read(asset, data, fileLength);
+    AAsset_close(asset);
 
-        if(!strcmp(name, (fileName + "." + fileType).c_str()))
-        {
-            __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File Name %s", (fileName + "." + fileType).c_str());
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Texture %s", (fileName + "." + fileType).c_str());
 
-            AAsset* asset = AAssetManager_open(&assetManager,
-                                              name, AASSET_MODE_UNKNOWN);
+    uint32_t imgWidth, imgHeight, n;
+    unsigned char* imageData = stbi_load_from_memory(
+            data, fileLength, reinterpret_cast<int*>(&imgWidth),
+            reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
 
-            if(asset == nullptr) return;
+    imageSize = width * height * 4;
 
-            size_t fileLength = AAsset_getLength(asset);
-            unsigned char *data = new unsigned char[fileLength];
-            AAsset_read(asset, data, fileLength);
-            AAsset_close(asset);
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Texture Buffer %s", (fileName + "." + fileType).c_str());
 
-            uint32_t imgWidth, imgHeight, n;
-            unsigned char* imageData = stbi_load_from_memory(
-                    data, fileLength, reinterpret_cast<int*>(&imgWidth),
-                    reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
+    createTextureFromBuffer(imageData, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
 
-            imageSize = width * height * 4;
+    indices.count = static_cast<uint32_t>(indexBuffer.size());
 
-            createTextureFromBuffer(imageData, imageSize, VK_FORMAT_R8G8B8A8_UNORM, width, height, newPhysicalDevice, newLogicalDevice, transferCommandPool, transferQueue);
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Buffers %s", (fileName + "." + fileType).c_str());
 
-            indices.count = static_cast<uint32_t>(indexBuffer.size());
+    createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
+    createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
 
-            createVertexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &vertexBuffer);
-            createIndexBuffer(newPhysicalDevice, newLogicalDevice, transferQueue, transferCommandPool, &indexBuffer);
-
-            AAssetDir_close(assetDir);
-        }
-    }
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Finished Texture %s", (fileName + "." + fileType).c_str());
 
 }
 

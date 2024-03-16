@@ -64,7 +64,7 @@ static std::filesystem::path pathToProgram;
 
 #define TUTORIAL_TEXTURE_COUNT 1
 static const char* texFiles[TUTORIAL_TEXTURE_COUNT] = {
-        "titlebg.png",
+        "title.png",
 };
 
 enum class Pipelines

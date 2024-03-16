@@ -41,6 +41,7 @@ void UI::render(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout)
 {
     if (currentOverlay != nullptr)
     {
+        __android_log_print(ANDROID_LOG_INFO, "MyTag", "Rendering Overlay");
         currentOverlay->render(commandBuffer, pipelineLayout);
     }
 }

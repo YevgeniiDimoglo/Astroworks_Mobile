@@ -21,7 +21,7 @@ Sprite::Sprite(std::string filePath)
     this->fileType = fileType;
 }
 
-void Sprite::loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout)
+void Sprite::loadFile(AAssetManager& assetManager, VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout)
 {
     this->newPhysicalDevice = newPhysicalDevice;
     this->newLogicalDevice = newLogicalDevice;
@@ -53,7 +53,7 @@ void Sprite::loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalD
     LOGI("Loading sprite");
 
     const char* dirName = "Textures";
-    AAssetDir* assetDir = AAssetManager_openDir(assetManager, dirName);
+    AAssetDir* assetDir = AAssetManager_openDir(&assetManager, dirName);
 
     const char *name = nullptr;
 
@@ -65,33 +65,19 @@ void Sprite::loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalD
         {
             __android_log_print(ANDROID_LOG_INFO, "MyTag", "Loading File Name %s", (fileName + "." + fileType).c_str());
 
-            AAsset* file = AAssetManager_open(assetManager,
-                                              name, AASSET_MODE_STREAMING);
-            if(!file)
-            {
-                __android_log_print(ANDROID_LOG_INFO, "MyTag", "Failed to load asset %s", name);
+            AAsset* asset = AAssetManager_open(&assetManager,
+                                              name, AASSET_MODE_UNKNOWN);
 
-                FILE* asset = fopen(name, "w");
+            if(asset == nullptr) return;
 
-                if(asset == nullptr)
-                {
-                    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Failed to load file asset %s", name);
-                }
-                else
-                {
-                    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Load file asset %s", name);
-                }
-                return;
-            }
-            size_t fileLength = AAsset_getLength(file);
-
-            stbi_uc* fileContent = new unsigned char[fileLength];
-            AAsset_read(file, fileContent, fileLength);
-            AAsset_close(file);
+            size_t fileLength = AAsset_getLength(asset);
+            unsigned char *data = new unsigned char[fileLength];
+            AAsset_read(asset, data, fileLength);
+            AAsset_close(asset);
 
             uint32_t imgWidth, imgHeight, n;
             unsigned char* imageData = stbi_load_from_memory(
-                    fileContent, fileLength, reinterpret_cast<int*>(&imgWidth),
+                    data, fileLength, reinterpret_cast<int*>(&imgWidth),
                     reinterpret_cast<int*>(&imgHeight), reinterpret_cast<int*>(&n), 4);
 
             imageSize = width * height * 4;

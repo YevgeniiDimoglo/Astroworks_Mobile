@@ -96,7 +96,7 @@ public:
     float getGColor() const { return b; }
     float getAColor() const { return a; }
 
-    void loadFile(AAssetManager *assetManager, VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout);
+    void loadFile(AAssetManager& assetManager, VkPhysicalDevice newPhysicalDevice, VkDevice newLogicalDevice, VkQueue transferQueue, VkCommandPool transferCommandPool, VkDescriptorPool samplerDescriptorPool, VkDescriptorSetLayout samplerSetLayout);
     void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout);
 
     void updateTransform();

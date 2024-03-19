@@ -199,6 +199,7 @@ Sprite::Image Sprite::createTextureFromBuffer(void* buffer, VkDeviceSize bufferS
     image.width = texWidth;
     image.height = texHeight;
 
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Buffer %s", (fileName + "." + fileType).c_str());
     VkBuffer imageStagingBuffer;
     VkDeviceMemory imageStagingBufferMemory;
     createBuffer(newPhysicalDevice, newLogicalDevice, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
@@ -211,6 +212,7 @@ Sprite::Image Sprite::createTextureFromBuffer(void* buffer, VkDeviceSize bufferS
     memcpy(data, buffer, static_cast<size_t>(bufferSize));
     vkUnmapMemory(newLogicalDevice, imageStagingBufferMemory);
 
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Image %s", (fileName + "." + fileType).c_str());
     // Create image to hold final texture
     VkImage texImage;
     VkDeviceMemory texImageMemory;
@@ -238,6 +240,7 @@ Sprite::Image Sprite::createTextureFromBuffer(void* buffer, VkDeviceSize bufferS
     vkDestroyBuffer(newLogicalDevice, imageStagingBuffer, nullptr);
     vkFreeMemory(newLogicalDevice, imageStagingBufferMemory, nullptr);
 
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Sampler %s", (fileName + "." + fileType).c_str());
     VkSamplerCreateInfo samplerInfo{};
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
     samplerInfo.magFilter = VK_FILTER_LINEAR;
@@ -275,11 +278,14 @@ Sprite::Image Sprite::createTextureFromBuffer(void* buffer, VkDeviceSize bufferS
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 1;
 
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Image View %s", (fileName + "." + fileType).c_str());
+
     VkImageView imageView;
     vkCreateImageView(newLogicalDevice, &viewInfo, nullptr, &imageView);
 
     image.view = imageView;
 
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Creating Descriptor Set %s", (fileName + "." + fileType).c_str());
     VkDescriptorSet descriptorSet;
 
     // Descriptor set allocation info
@@ -314,6 +320,7 @@ Sprite::Image Sprite::createTextureFromBuffer(void* buffer, VkDeviceSize bufferS
     descriptorWrite.descriptorCount = 1;
     descriptorWrite.pImageInfo = &imageInfo;
 
+    __android_log_print(ANDROID_LOG_INFO, "MyTag", "Update Descriptor Set %s", (fileName + "." + fileType).c_str());
     // Update new descriptor set
     vkUpdateDescriptorSets(newLogicalDevice, 1, &descriptorWrite, 0, nullptr);
 
